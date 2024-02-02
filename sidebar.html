@@ -6,26 +6,29 @@
 <body style="background-color:#EEEEEE">
 <form name="counter">
     <span style="white-space:nowrap">
-        <? for (const charName of index.keys()) { ?>
-          <? if (charName !== "Summary") { ?>
-          <?= charName ?>
-          <br>
-                <table>
-                  <tr>
-                    <td>
-                      <input type="button" id=<?=charName?> value="Доб. счётчик" onclick="addCounter(this.id)" />
-                    </td>
-                    <td><input type="text" id=<?=charName+"_effect"?> value="Эффект" size="10" /></td>
-                    <td><input type="number" id=<?=charName+"_count"?> value="10" size="5" /></td>
-                  </tr>
-                  <tr>
-                    <td><input type="button" name="addTimerB" value="Доб. таймер" style="width:100%" /></td>
-                    <td><input type="text" name="timeName" value="Эффект" size="10" /></td>
-                </table>
-                <br>
-          <? } ?>
-          <? } ?>
-          <input type="button" name="stepAllB" value="Шаг счётчиков" onclick="stepAll()" />
+        <select name="charSelect">
+            <? for (const charName of index.keys()) { ?>
+                <? if (charName !== "Summary") { ?>
+                    <option value="<?=charName?>"><?=charName?></option>
+                <? } ?>
+            <? } ?>
+        </select>
+        <br>
+        <table>
+            <tr>
+                <td>
+                    <input type="button" value="Доб. счётчик" onclick="addCounter(document.counter.charSelect.value)" />
+                </td>
+                <td><input type="text" id="effect" value="Эффект" size="10" /></td>
+                <td><input type="number" id="count" value="10" size="5" /></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="Доб. таймер" style="width:100%" /></td>
+                <td><input type="text" name="timeEffect" value="Эффект" size="10" /></td>
+            </tr>
+        </table>
+        <br>
+        <input type="button" name="stepAllB" value="Шаг счётчиков" onclick="stepAll()" />
     </span>
 </form>
 <script>
@@ -39,8 +42,8 @@
             console.log(index);
             google.script.run.addCounterPair(
                     name, index.get(name), index.get("Summary"),
-                    document.getElementById(name+"_effect").value,
-                    document.getElementById(name+"_count").value);
+                    document.getElementById("effect").value,
+                    document.getElementById("count").value);
       }
       function addTimer() {
             google.script.run.addTimer(document.counter.timeName.value);
