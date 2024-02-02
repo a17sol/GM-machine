@@ -1,5 +1,6 @@
 const COUNTER_BOX_CODE = "counter box code";
 const TIMER_BOX_CODE = "timer box code";
+const SUMMARY_BOX_CODE = "summary box code"
 const COUNTER_X = 435;
 const COUNTER_Y = 125;
 const TIMER_X = 415;
@@ -16,6 +17,20 @@ function onInstall(event) {
 }
 
 function showSidebar() {
+    var summaryArray = Array();
+    for (const page of SlidesApp.getActivePresentation().getSlides()) {
+        for (const elem of page.getPageElements()) {
+            if (elem.getTitle() === SUMMARY_BOX_CODE) {
+                const summary = elem.asShape().getText().asString();
+                for (const record of summary.split("\n")) {
+                    summaryArray.push(record.split(" - "));
+                }
+            }
+        }
+    }
+    summaryArray.pop();
+    const SUMMARY = summaryArray;
+
     const ui = HtmlService
         .createHtmlOutputFromFile('sidebar')
         .setTitle('Control panel');
