@@ -1,50 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+      <meta charset="utf-8" />
 </head>
 <body style="background-color:#EEEEEE">
 <form name="counter">
-      <span style="white-space:nowrap">
-      <input type="button" name="addCounter" value="Add counter" />
-      <input type="text" name="countName" value="Name" size="10" />
-      <input type="number" name="initCount" value="10" size="5" />
-      <br><br>
-      <input type="button" name="stepAllB" value="Step all counters" />
-      <input type="button" name="stepVisibleB" value="Step visible counters" />
-      <br><br>
-      <input type="button" name="addTimerB" value="Add timer" />
-      <input type="text" name="timeName" value="Name" size="10" />
-      </span>
+    <span style="white-space:nowrap">
+        <? for (const charName of index.keys()) { ?>
+          <? if (charName !== "Summary") { ?>
+          <?= charName ?>
+          <br>
+                <table>
+                  <tr>
+                    <td>
+                      <input type="button" id=<?=charName?> value="Доб. счётчик" onclick="addCounter(this.id)" />
+                    </td>
+                    <td><input type="text" id=<?=charName+"_effect"?> value="Эффект" size="10" /></td>
+                    <td><input type="number" id=<?=charName+"_count"?> value="10" size="5" /></td>
+                  </tr>
+                  <tr>
+                    <td><input type="button" name="addTimerB" value="Доб. таймер" style="width:100%" /></td>
+                    <td><input type="text" name="timeName" value="Эффект" size="10" /></td>
+                </table>
+                <br>
+          <? } ?>
+          <? } ?>
+          <input type="button" name="stepAllB" value="Шаг счётчиков" onclick="stepAll()" />
+    </span>
 </form>
 <script>
-    function addCounter() {
-        google.script.run.addCounter(
-                document.counter.countName.value, document.counter.initCount.value);
-    }
-    function addTimer() {
-        google.script.run.addTimer(document.counter.timeName.value);
-    }
-    function stepAll() {
-        document.counter.stepAllB.disabled = true;
-        google.script.run
-            .withSuccessHandler(function(r){
-                document.counter.stepAllB.disabled = false;
-            })
-            .stepAll();
-    }
-    function stepVisible() {
-        document.counter.stepVisibleB.disabled = true;
-        google.script.run
-            .withSuccessHandler(function(r){
-                document.counter.stepVisibleB.disabled = false;
-            })
-            .stepVisible();
-    }
-    document.counter.addCounter.addEventListener("click", addCounter);
-    document.counter.addTimerB.addEventListener("click", addTimer);
-    document.counter.stepAllB.addEventListener("click", stepAll);
-    document.counter.stepVisibleB.addEventListener("click", stepVisible);
+      console.log("start script");
+      index = new Map();
+      <? for (const charName of index.keys()) { ?>
+            index.set(<?= charName ?>, <?= index.get(charName) ?>);
+            <? } ?>
+      console.log(index);
+      function addCounter(name) {
+            console.log(index);
+            google.script.run.addCounterPair(
+                    name, index.get(name), index.get("Summary"),
+                    document.getElementById(name+"_effect").value,
+                    document.getElementById(name+"_count").value);
+      }
+      function addTimer() {
+            google.script.run.addTimer(document.counter.timeName.value);
+      }
+      function stepAll() {
+            console.log(Array.from(index.values()));
+            document.counter.stepAllB.disabled = true;
+            google.script.run
+                    .withSuccessHandler(function(r){
+                          document.counter.stepAllB.disabled = false;
+                    })
+                    .stepAll(Array.from(index.values()));
+      }
+
+      //document.counter.addCounterB.addEventListener("click", addCounter);
+      //document.counter.addTimerB.addEventListener("click", addTimer);
+      //document.counter.stepAllB.addEventListener("click", stepAll);
 </script>
 </body>
 </html>
