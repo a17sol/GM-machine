@@ -24,15 +24,18 @@ function showSidebar() {
 
 function addCounter(name, count) {
     var currentPage = SlidesApp.getActivePresentation().getSelection().getCurrentPage();
-    var box = currentPage.insertShape(SlidesApp.ShapeType.RECTANGLE, COUNTER_X, COUNTER_Y, 210, 65);
+    var box = currentPage.insertShape(
+        SlidesApp.ShapeType.RECTANGLE, COUNTER_X, COUNTER_Y, 210, 65);
     box.getBorder().setWeight(1);
     var title = currentPage.insertTextBox(name, COUNTER_X, COUNTER_Y, 140, 65);
     title.getText().getTextStyle().setFontSize(21);
-    title.getText().getParagraphStyle().setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+    title.getText().getParagraphStyle()
+        .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
     var count = currentPage.insertTextBox(count, COUNTER_X+140, COUNTER_Y, 70, 65);
     count.getText().getTextStyle().setFontSize(26);
-    count.getText().getParagraphStyle().setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+    count.getText().getParagraphStyle()
+        .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     count.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
     count.setTitle(COUNTER_BOX_CODE);
     currentPage.group([box, title, count]);
@@ -40,15 +43,18 @@ function addCounter(name, count) {
 
 function addTimer(name) {
     var currentPage = SlidesApp.getActivePresentation().getSelection().getCurrentPage();
-    var box = currentPage.insertShape(SlidesApp.ShapeType.RECTANGLE, TIMER_X, TIMER_Y, 250, 65);
+    var box = currentPage.insertShape(
+        SlidesApp.ShapeType.RECTANGLE, TIMER_X, TIMER_Y, 250, 65);
     box.getBorder().setWeight(1);
     var title = currentPage.insertTextBox(name, TIMER_X, TIMER_Y, 140, 65);
     title.getText().getTextStyle().setFontSize(21);
-    title.getText().getParagraphStyle().setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+    title.getText().getParagraphStyle()
+        .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
     var time = currentPage.insertTextBox("00:00", TIMER_X+140, TIMER_Y, 110, 65);
     time.getText().getTextStyle().setFontSize(26);
-    time.getText().getParagraphStyle().setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+    time.getText().getParagraphStyle()
+        .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     time.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
     time.setTitle(TIMER_BOX_CODE);
     currentPage.group([box, title, time]);
@@ -104,7 +110,8 @@ function stepOnPage(page) {
         if (i.getPageElementType() === SlidesApp.PageElementType.GROUP) {
             for (const j of i.asGroup().getChildren()) {
                 if (j.getTitle() === COUNTER_BOX_CODE) {
-                    j.asShape().getText().setText(Number(j.asShape().getText().asString())-1);
+                    j.asShape().getText()
+                        .setText(Number(j.asShape().getText().asString())-1);
                     if (j.asShape().getText().asString() === "0\n") {
                         i.asGroup().remove();
                     }

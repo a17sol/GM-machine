@@ -19,7 +19,8 @@
 </form>
 <script>
     function addCounter() {
-        google.script.run.addCounter(document.counter.countName.value, document.counter.initCount.value);
+        google.script.run.addCounter(
+                document.counter.countName.value, document.counter.initCount.value);
     }
     function addTimer() {
         google.script.run.addTimer(document.counter.timeName.value);
