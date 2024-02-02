@@ -5,31 +5,33 @@
 </head>
 <body style="background-color:#EEEEEE">
 <form name="counter">
-    <span style="white-space:nowrap">
-        <select name="charSelect">
-            <? for (const charName of index.keys()) { ?>
-                <? if (charName !== "Summary") { ?>
-                    <option value="<?=charName?>"><?=charName?></option>
+    <br>
+    <table>
+        <tr>
+            <td colspan="3">
+                <select name="charSelect">
+                <? for (const charName of index.keys()) { ?>
+                    <? if (charName !== "Summary") { ?>
+                        <option value="<?=charName?>"><?=charName?></option>
+                    <? } ?>
                 <? } ?>
-            <? } ?>
-        </select>
-        <br>
-        <table>
-            <tr>
-                <td>
-                    <input type="button" value="Доб. счётчик" onclick="addCounter(document.counter.charSelect.value)" />
-                </td>
-                <td><input type="text" id="effect" value="Эффект" size="10" /></td>
-                <td><input type="number" id="count" value="10" size="5" /></td>
-            </tr>
-            <tr>
-                <td><input type="button" value="Доб. таймер" style="width:100%" /></td>
-                <td><input type="text" name="timeEffect" value="Эффект" size="10" /></td>
-            </tr>
-        </table>
-        <br>
-        <input type="button" name="stepAllB" value="Шаг счётчиков" onclick="stepAll()" />
-    </span>
+    </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" value="Доб. счётчик" onclick="addCounter(document.counter.charSelect.value)" />
+            </td>
+            <td><input type="text" id="effect" value="Эффект" size="10" /></td>
+            <td><input type="number" id="count" value="10" size="5" /></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="Доб. таймер" style="width:100%" /></td>
+            <td><input type="text" name="timeEffect" value="Эффект" size="10" /></td>
+        </tr>
+    </table>
+    <br>
+    <input type="button" name="stepAllB" value="Шаг счётчиков" onclick="stepAll()" />
 </form>
 <script>
       console.log("start script");
