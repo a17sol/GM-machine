@@ -123,9 +123,9 @@ function freeCoordinates(page, summary) {
 
 function addTimePair(charName, charPage, sumPage, effect, initTime) {
     if (charName !== undefined) {
-        addCounter(charName, sumPage, true, effect, initTime);
+        addTime(charName, sumPage, true, effect, initTime);
     }
-    addCounter(charName, charPage, false, effect, initTime);
+    addTime(charName, charPage, false, effect, initTime);
 }
 
 function addTime(charName, page, addingToSummary, effect, initTime) {
@@ -143,16 +143,16 @@ function addTime(charName, page, addingToSummary, effect, initTime) {
     const box = targetPage.insertShape(
         SlidesApp.ShapeType.RECTANGLE, x, y, 210, 65);
     box.getBorder().setWeight(1);
-    const title = targetPage.insertTextBox(effect, x, y, 130, 80);
-    title.getText().getTextStyle().setFontSize(18);
+    const title = targetPage.insertTextBox(effect, x, y, 135, 65);
+    title.getText().getTextStyle().setFontSize(19);
     if (addingToSummary) {
         title.getText().setText(charName+": "+effect);
-        title.getText().getTextStyle().setFontSize(14);
+        title.getText().getTextStyle().setFontSize(15);
     }
     title.getText().getParagraphStyle()
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
-    const time = targetPage.insertTextBox(initTime, x + 145, y, 65, 65);
+    const time = targetPage.insertTextBox(initTime, x + 135, y, 75, 65);
     time.getText().getTextStyle().setFontSize(22);
     time.getText().getParagraphStyle()
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
@@ -177,6 +177,7 @@ function updateTimerText() {
                         }
                         if (h === 0 && m === 0) {
                             i.asGroup().remove();
+                            continue;
                         }
                         h = addZero(h);
                         m = addZero(m);
