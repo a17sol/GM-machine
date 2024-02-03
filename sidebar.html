@@ -37,6 +37,9 @@
             <td><input type="text" id="clockEffect" value="Эффект" size="10" /></td>
         </tr>
         <tr>
+            <td><input type="button" value="Удал. часы" style="width:100%" onclick="delClock(document.counter.charSelect.value)" /></td>
+        </tr>
+        <tr>
             <td colspan="3">
                 <br>
                 <input type="button" name="stepAllB" value="Шаг счётчиков" onclick="stepAll()" />
@@ -75,6 +78,12 @@
         google.script.run.addTimePair(
             name, index.get(name), index.get("Summary"),
             document.getElementById("clockEffect").value, "00:00");
+    }
+    function delClock(name) {
+        if (name === "NPC") {
+            name = document.counter.npc_name.value;
+        }
+        google.script.run.delClockPair(name, index.get(name), index.get("Summary"));
     }
     function stepAll() {
         console.log(Array.from(index.values()));

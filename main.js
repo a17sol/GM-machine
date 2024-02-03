@@ -3,16 +3,10 @@ const TIMER_BOX_CODE = "timer box";
 const CLOCK_BOX_CODE = "clock box";
 const SUMMARY_BOX_CODE = "summary box"
 
-const TIMER_X_PLAYER = 415;
-const TIMER_Y_PLAYER = 125;
-
 const GM_GRID = [[35,80], [35,155], [35,230], [35,305],
     [255,80], [255,155], [255,230], [255,305],
     [475,80], [475,155], [475,230], [475,305]];
-const PLAYER_GRID = [[435,120], [435,195], [435,270]]
-
-const TIMER_X_GM = 100;
-const TIMER_Y_GM = 100;
+const PLAYER_GRID = [[435,95], [435,170], [435,245], [435,320]]
 
 function onOpen(event) {
     SlidesApp.getUi().createAddonMenu()
@@ -48,10 +42,10 @@ function showSidebar() {
 }
 
 function addCounterPair(charName, charPage, sumPage, effect, initCount) {
-    if (charName !== undefined) {
-        addCounter(charName, sumPage, true, effect, initCount);
+    if (charPage !== null) {
+        addCounter(charName, charPage, false, effect, initCount);
     }
-    addCounter(charName, charPage, false, effect, initCount);
+    addCounter(charName, sumPage, true, effect, initCount);
 }
 
 function addCounter(charName, page, addingToSummary, effect, initCount) {
@@ -70,7 +64,7 @@ function addCounter(charName, page, addingToSummary, effect, initCount) {
         SlidesApp.ShapeType.RECTANGLE, x, y, 210, 65);
     box.getBorder().setWeight(1);
     const title = targetPage.insertTextBox(effect, x, y, 145, 65);
-    title.getText().getTextStyle().setFontSize(21);
+    title.getText().getTextStyle().setFontSize(19);
     if (addingToSummary) {
         title.getText().setText(charName+": "+effect);
         title.getText().getTextStyle().setFontSize(15);
@@ -122,10 +116,10 @@ function freeCoordinates(page, summary) {
 }
 
 function addTimePair(charName, charPage, sumPage, effect, initTime) {
-    if (charName !== undefined) {
-        addTime(charName, sumPage, true, effect, initTime);
+    if (charPage !== null) {
+        addTime(charName, charPage, false, effect, initTime);
     }
-    addTime(charName, charPage, false, effect, initTime);
+    addTime(charName, sumPage, true, effect, initTime);
 }
 
 function addTime(charName, page, addingToSummary, effect, initTime) {
@@ -152,13 +146,44 @@ function addTime(charName, page, addingToSummary, effect, initTime) {
     title.getText().getParagraphStyle()
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
-    const time = targetPage.insertTextBox(initTime, x + 135, y, 75, 65);
+
+    const commText = initTime === "00:00" ? "Прошло" : "Осталось";
+    const comment = targetPage.insertTextBox(commText, x + 135, y, 75, 25);
+    comment.getText().getTextStyle().setFontSize(13);
+    comment.getText().getParagraphStyle()
+        .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+    comment.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
+
+    const time = targetPage.insertTextBox(initTime, x + 135, y + 15, 75, 50);
     time.getText().getTextStyle().setFontSize(22);
     time.getText().getParagraphStyle()
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     time.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
     time.setTitle(initTime === "00:00" ? CLOCK_BOX_CODE : TIMER_BOX_CODE);
-    targetPage.group([box, title, time]);
+    targetPage.group([box, title, time, comment]);
+}
+
+function delClockPair(name, page, summaryPage) {
+    console.log(page+" "+summaryPage);
+    if (page !== null) {
+        delClock("", page);
+    }
+    delClock(name+":", summaryPage);
+}
+
+function delClock(name, page) {
+    targetPage = SlidesApp.getActivePresentation().getSlides()[page];
+    for (const elem of targetPage.getPageElements()) {
+        if (elem.getPageElementType() === SlidesApp.PageElementType.GROUP) {
+            let isClock = false;
+            let ofRightChar = false;
+            for (const subElem of elem.asGroup().getChildren()) {
+                if (subElem.getTitle() === CLOCK_BOX_CODE) {isClock = true;}
+                if (subElem.asShape().getText().asString().includes(name)) {ofRightChar = true;}
+            }
+            if (isClock && ofRightChar) {elem.asGroup().remove();}
+        }
+    }
 }
 
 function updateTimerText() {
@@ -208,4 +233,3 @@ function addZero(n) {
         return n
     }
 }
-
