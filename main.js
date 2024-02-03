@@ -87,6 +87,29 @@ function addCounter(charName, page, addingToSummary, effect, initCount) {
     targetPage.group([box, title, count]);
 }
 
+function stepAll(indexPages) {
+    const allSlides = SlidesApp.getActivePresentation().getSlides();
+    for (const i of indexPages) {
+        stepOnPage(allSlides[i]);
+    }
+}
+
+function stepOnPage(page) {
+    for (const i of page.getPageElements()) {
+        if (i.getPageElementType() === SlidesApp.PageElementType.GROUP) {
+            for (const j of i.asGroup().getChildren()) {
+                if (j.getTitle() === COUNTER_BOX_CODE) {
+                    j.asShape().getText()
+                        .setText(Number(j.asShape().getText().asString())-1);
+                    if (j.asShape().getText().asString() === "0\n") {
+                        i.asGroup().remove();
+                    }
+                }
+            }
+        }
+    }
+}
+
 function freeCoordinates(page, summary) {
     function occupied(arr, pair) {
         return arr.some((arrVal) => arrVal.getLeft() === pair[0] && arrVal.getTop() === pair[1]);
@@ -98,23 +121,44 @@ function freeCoordinates(page, summary) {
     }
 }
 
-function addTimer(name) {
-    const currentPage = SlidesApp.getActivePresentation().getSelection().getCurrentPage();
-    const box = currentPage.insertShape(
-        SlidesApp.ShapeType.RECTANGLE, TIMER_X_PLAYER, TIMER_Y_PLAYER, 250, 65);
+function addTimePair(charName, charPage, sumPage, effect, initTime) {
+    if (charName !== undefined) {
+        addCounter(charName, sumPage, true, effect, initTime);
+    }
+    addCounter(charName, charPage, false, effect, initTime);
+}
+
+function addTime(charName, page, addingToSummary, effect, initTime) {
+    const targetPage = SlidesApp.getActivePresentation()
+        .getSlides()[page];
+    const xy = freeCoordinates(targetPage, addingToSummary);
+    if (xy === undefined) {
+        SlidesApp.getUi().alert("Закончилось место на слайде "
+            + (addingToSummary ? "сводки" : charName)
+            + ". На этот слайд таймер не добавлен.");
+        return;
+    }
+    const x = xy[0];
+    const y = xy[1];
+    const box = targetPage.insertShape(
+        SlidesApp.ShapeType.RECTANGLE, x, y, 210, 65);
     box.getBorder().setWeight(1);
-    const title = currentPage.insertTextBox(name, TIMER_X_PLAYER, TIMER_Y_PLAYER, 140, 65);
-    title.getText().getTextStyle().setFontSize(21);
+    const title = targetPage.insertTextBox(effect, x, y, 130, 80);
+    title.getText().getTextStyle().setFontSize(18);
+    if (addingToSummary) {
+        title.getText().setText(charName+": "+effect);
+        title.getText().getTextStyle().setFontSize(14);
+    }
     title.getText().getParagraphStyle()
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
-    const time = currentPage.insertTextBox("00:00", TIMER_X_PLAYER + 140, TIMER_Y_PLAYER, 110, 65);
-    time.getText().getTextStyle().setFontSize(26);
+    const time = targetPage.insertTextBox(initTime, x + 145, y, 65, 65);
+    time.getText().getTextStyle().setFontSize(22);
     time.getText().getParagraphStyle()
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     time.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
-    time.setTitle(TIMER_BOX_CODE);
-    currentPage.group([box, title, time]);
+    time.setTitle(initTime === "00:00" ? CLOCK_BOX_CODE : TIMER_BOX_CODE);
+    targetPage.group([box, title, time]);
 }
 
 function updateTimerText() {
@@ -164,29 +208,3 @@ function addZero(n) {
     }
 }
 
-function stepVisible() {
-    stepOnPage(SlidesApp.getActivePresentation().getSelection().getCurrentPage());
-}
-
-function stepAll(indexPages) {
-    const allSlides = SlidesApp.getActivePresentation().getSlides();
-    for (const i of indexPages) {
-        stepOnPage(allSlides[i]);
-    }
-}
-
-function stepOnPage(page) {
-    for (const i of page.getPageElements()) {
-        if (i.getPageElementType() === SlidesApp.PageElementType.GROUP) {
-            for (const j of i.asGroup().getChildren()) {
-                if (j.getTitle() === COUNTER_BOX_CODE) {
-                    j.asShape().getText()
-                        .setText(Number(j.asShape().getText().asString())-1);
-                    if (j.asShape().getText().asString() === "0\n") {
-                        i.asGroup().remove();
-                    }
-                }
-            }
-        }
-    }
-}
