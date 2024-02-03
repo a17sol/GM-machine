@@ -1,12 +1,15 @@
 const COUNTER_BOX_CODE = "counter box";
 const TIMER_BOX_CODE = "timer box";
 const SUMMARY_BOX_CODE = "summary box"
-const COUNTER_X_PLAYER = 435;
-const COUNTER_Y_PLAYER = 125;
+
 const TIMER_X_PLAYER = 415;
 const TIMER_Y_PLAYER = 125;
-const COUNTER_X_GM = 100;
-const COUNTER_Y_GM = 100;
+
+const GM_GRID = [[35,80], [35,155], [35,230], [35,305],
+                        [255,80], [255,155], [255,230], [255,305],
+                        [475,80], [475,155], [475,230], [475,305]];
+const PLAYER_GRID = [[435,120], [435,195], [435,270]]
+
 const TIMER_X_GM = 100;
 const TIMER_Y_GM = 100;
 
@@ -27,7 +30,7 @@ function showSidebar() {
             if (elem.getTitle() === SUMMARY_BOX_CODE) {
                 const summary = elem.asShape().getText().asString().trim();
                 for (const record of summary.split("\n")) {
-                    let pair = record.split(" - ");
+                    const pair = record.split(" - ");
                     if (pair[0] === "Summary" || pair[0] === "Сводка") {
                         pair[0] = "Summary";
                     }
@@ -44,19 +47,26 @@ function showSidebar() {
 }
 
 function addCounterPair(charName, charPage, sumPage, effect, initCount) {
-    addCounter(charName, charPage, false, effect, initCount);
     addCounter(charName, sumPage, true, effect, initCount);
+    addCounter(charName, charPage, false, effect, initCount);
 }
 
 function addCounter(charName, page, addingToSummary, effect, initCount) {
     const targetPage = SlidesApp.getActivePresentation()
         .getSlides()[page];
-    let x = addingToSummary ? COUNTER_X_GM : COUNTER_X_PLAYER;
-    let y = addingToSummary ? COUNTER_Y_GM : COUNTER_Y_PLAYER;
+    const xy = freeCoordinates(targetPage, addingToSummary);
+    if (xy === undefined) {
+        SlidesApp.getUi().alert("Закончилось место на слайде "
+            + (addingToSummary ? "сводки" : charName)
+            + ". На этот слайд счётчик не добавлен.");
+        return;
+    }
+    const x = xy[0];
+    const y = xy[1];
     const box = targetPage.insertShape(
         SlidesApp.ShapeType.RECTANGLE, x, y, 210, 65);
     box.getBorder().setWeight(1);
-    let title = targetPage.insertTextBox(effect, x, y, 145, 65);
+    const title = targetPage.insertTextBox(effect, x, y, 145, 65);
     title.getText().getTextStyle().setFontSize(21);
     if (addingToSummary) {
         title.getText().setText(charName+": "+effect);
@@ -72,6 +82,17 @@ function addCounter(charName, page, addingToSummary, effect, initCount) {
     count.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
     count.setTitle(COUNTER_BOX_CODE);
     targetPage.group([box, title, count]);
+}
+
+function freeCoordinates(page, summary) {
+    function occupied(arr, pair) {
+        return arr.some((arrVal) => arrVal.getLeft() === pair[0] && arrVal.getTop() === pair[1]);
+    }
+    for (const coord of summary ? GM_GRID : PLAYER_GRID) {
+        if (!occupied(page.getPageElements(), coord)) {
+            return coord;
+        }
+    }
 }
 
 function addTimer(name) {
