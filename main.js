@@ -6,8 +6,8 @@ const TIMER_X_PLAYER = 415;
 const TIMER_Y_PLAYER = 125;
 
 const GM_GRID = [[35,80], [35,155], [35,230], [35,305],
-                        [255,80], [255,155], [255,230], [255,305],
-                        [475,80], [475,155], [475,230], [475,305]];
+    [255,80], [255,155], [255,230], [255,305],
+    [475,80], [475,155], [475,230], [475,305]];
 const PLAYER_GRID = [[435,120], [435,195], [435,270]]
 
 const TIMER_X_GM = 100;
@@ -31,7 +31,7 @@ function showSidebar() {
                 const summary = elem.asShape().getText().asString().trim();
                 for (const record of summary.split("\n")) {
                     const pair = record.split(" - ");
-                    if (pair[0] === "Summary" || pair[0] === "Сводка") {
+                    if (pair[0] === "Summary" || pair[0] === "Сводка" || pair[0] === "Мастер-слайд") {
                         pair[0] = "Summary";
                     }
                     index.set(pair[0], parseInt(pair[1])-1);
@@ -47,7 +47,9 @@ function showSidebar() {
 }
 
 function addCounterPair(charName, charPage, sumPage, effect, initCount) {
-    addCounter(charName, sumPage, true, effect, initCount);
+    if (charName !== undefined) {
+        addCounter(charName, sumPage, true, effect, initCount);
+    }
     addCounter(charName, charPage, false, effect, initCount);
 }
 
