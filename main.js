@@ -26,7 +26,8 @@ function showSidebar() {
                 const summary = elem.asShape().getText().asString().trim();
                 for (const record of summary.split("\n")) {
                     const pair = record.split(" - ");
-                    if (pair[0] === "Summary" || pair[0] === "Сводка" || pair[0] === "Мастер-слайд") {
+                    if (pair[0] === "Summary" || pair[0] === "Сводка"
+                        || pair[0] === "Мастер-слайд") {
                         pair[0] = "Summary";
                     }
                     index.set(pair[0], parseInt(pair[1])-1);
@@ -179,7 +180,9 @@ function delClock(name, page) {
             let ofRightChar = false;
             for (const subElem of elem.asGroup().getChildren()) {
                 if (subElem.getTitle() === CLOCK_BOX_CODE) {isClock = true;}
-                if (subElem.asShape().getText().asString().includes(name)) {ofRightChar = true;}
+                if (subElem.asShape().getText().asString().startsWith(name)) {
+                    ofRightChar = true;
+                }
             }
             if (isClock && ofRightChar) {elem.asGroup().remove();}
         }
