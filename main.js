@@ -1,5 +1,6 @@
 const COUNTER_BOX_CODE = "counter box";
 const TIMER_BOX_CODE = "timer box";
+const CLOCK_BOX_CODE = "clock box";
 const SUMMARY_BOX_CODE = "summary box"
 
 const TIMER_X_PLAYER = 415;
@@ -122,6 +123,21 @@ function updateTimerText() {
             if (i.getPageElementType() === SlidesApp.PageElementType.GROUP) {
                 for (const j of i.asGroup().getChildren()) {
                     if (j.getTitle() === TIMER_BOX_CODE) {
+                        const prevTime = j.asShape().getText().asString();
+                        let h = Number(prevTime.substr(0, 2));
+                        let m = Number(prevTime.substr(3, 2));
+                        m = m - 1;
+                        if (m === -1) {
+                            m = 59;
+                            h = h - 1;
+                        }
+                        if (h === 0 && m === 0) {
+                            i.asGroup().remove();
+                        }
+                        h = addZero(h);
+                        m = addZero(m);
+                        j.asShape().getText().setText(h+":"+m);
+                    } else if (j.getTitle() === CLOCK_BOX_CODE) {
                         const prevTime = j.asShape().getText().asString();
                         let h = Number(prevTime.substr(0, 2));
                         let m = Number(prevTime.substr(3, 2));
