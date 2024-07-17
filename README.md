@@ -6,9 +6,9 @@ and allows real-time timers to be set to simulate rushed decision making.
 
 ### Installation
 First of all, prepare a presentation.
-1. Copy the presentation template from the link: 
+1. Copy (File > Make a copy > Entire presentation) the presentation template from the link: 
 https://docs.google.com/presentation/d/1zHa5-70QTQsXFc5z6VSd87qaBktKY3hhJjlS1Lzud6o/edit?usp=sharing 
-(File > Make a copy > Entire presentation). 
+(created by Evgeny Gubanov).
 2. Duplicate the character sheet template as many times as you need and fill it out. 
 In addition, the presentation should include a Summary slide that will give a brief summary of all the effects in effect. 
 3. At the end of the presentation there is a special Table of Contents text box. 
