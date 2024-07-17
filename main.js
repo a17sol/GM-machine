@@ -26,8 +26,7 @@ function showSidebar() {
                 const summary = elem.asShape().getText().asString().trim();
                 for (const record of summary.split("\n")) {
                     const pair = record.split(" - ");
-                    if (pair[0] === "Summary" || pair[0] === "Сводка"
-                        || pair[0] === "Мастер-слайд") {
+                    if (pair[0] === "Summary" || pair[0] === "Master slide") {
                         pair[0] = "Summary";
                     }
                     index.set(pair[0], parseInt(pair[1])-1);
@@ -38,7 +37,7 @@ function showSidebar() {
 
     const ui = HtmlService
         .createTemplateFromFile('sidebar')
-        .evaluate().setTitle("Панель управления");
+        .evaluate().setTitle("Control panel");
     SlidesApp.getUi().showSidebar(ui);
 }
 
@@ -54,9 +53,9 @@ function addCounter(charName, page, addingToSummary, effect, initCount) {
         .getSlides()[page];
     const xy = freeCoordinates(targetPage, addingToSummary);
     if (xy === undefined) {
-        SlidesApp.getUi().alert("Закончилось место на слайде "
-            + (addingToSummary ? "сводки" : charName)
-            + ". На этот слайд счётчик не добавлен.");
+        SlidesApp.getUi().alert("No room on the "
+            + (addingToSummary ? "Summary" : charName)
+            + " slide. No counter has been added to this slide.");
         return;
     }
     const x = xy[0];
@@ -128,9 +127,9 @@ function addTime(charName, page, addingToSummary, effect, initTime) {
         .getSlides()[page];
     const xy = freeCoordinates(targetPage, addingToSummary);
     if (xy === undefined) {
-        SlidesApp.getUi().alert("Закончилось место на слайде "
-            + (addingToSummary ? "сводки" : charName)
-            + ". На этот слайд таймер не добавлен.");
+        SlidesApp.getUi().alert("No room on the "
+            + (addingToSummary ? "Summary" : charName)
+            + " slide. No counter has been added to this slide.");
         return;
     }
     const x = xy[0];
@@ -148,7 +147,7 @@ function addTime(charName, page, addingToSummary, effect, initTime) {
         .setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
     title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
 
-    const commText = initTime === "00:00" ? "Прошло" : "Осталось";
+    const commText = initTime === "00:00" ? "Passed" : "Left";
     const comment = targetPage.insertTextBox(commText, x + 135, y, 75, 25);
     comment.getText().getTextStyle().setFontSize(13);
     comment.getText().getParagraphStyle()
